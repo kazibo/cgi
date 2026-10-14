@@ -16,10 +16,10 @@ public record OperationResponse(
             String type,
             Currency currency,
             BigDecimal amount,
-            Currency sourceCurrency,
-            BigDecimal sourceAmount,
-            Currency targetCurrency,
-            BigDecimal targetAmount,
-            BigDecimal exchangeRate
+            Currency currencyFrom,
+            BigDecimal amountFrom,
+            Currency currencyTo,
+            BigDecimal amountTo,
+            BigDecimal rate
     ) {}
 }

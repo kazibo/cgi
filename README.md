@@ -86,3 +86,5 @@ External logging URL and other application settings can be configured in `src/ma
 ## Testing
 
 Database is seeded with sample data. 4 total accounts with ids 1-4. Go to http://localhost:8080/swagger-ui/index.html to try out how endpoints work.
+
+Run tests with `.\mvnw.cmd test` on Windows and `./mvnw test` on Linux / macOS 
