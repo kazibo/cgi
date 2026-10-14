@@ -100,3 +100,5 @@ For example:
 - Account creation. The idea is when account is created, row with balances for each currency is created, but it depends on bank policy, maybe currency for account should be created when first operation with said currency is attempted, or even should be created separately from bank account settings 
 - Withdraw/exchange limits
 - Rounding rules for operations and precision should be corrected according to bank rules
+- Logging should be done in other places, not just before withdrawal request (i guess), but I will just do what was told in the task
+- Not sure what should be done if the external service requested before withdrawal does not respond. If it is just logging, then probably money should still be withdrawn, but for example if it's security identity check, then only success response should allow withdrawal
