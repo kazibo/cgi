@@ -95,6 +95,8 @@ It is clear that the project is merely a sample and a lot more could be done to 
 
 For example:
 
-- Exchange rates could be taken from Swedbank's exchange rates page
+- Exchange rates could be taken from Swedbank's exchange rates page dynamically
+- Exchange rates could be direct between non EUR currencies, now everything is converted through EUR
+- Account creation. The idea is when account is created, row with balances for each currency is created, but it depends on bank policy, maybe currency for account should be created when first operation with said currency is attempted, or even should be created separately from bank account settings 
 - Withdraw/exchange limits
-- Rounding rules for operations
+- Rounding rules for operations and precision should be corrected according to bank rules

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -19,13 +20,16 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountBalanceRepository balanceRepository;
+    private final ExchangeRateProvider exchangeRateProvider;
 
     public AccountService(
             AccountRepository accountRepository,
-            AccountBalanceRepository balanceRepository
+            AccountBalanceRepository balanceRepository,
+            ExchangeRateProvider exchangeRateProvider
     ) {
         this.accountRepository = accountRepository;
         this.balanceRepository = balanceRepository;
+        this.exchangeRateProvider = exchangeRateProvider;
     }
 
     @Transactional(readOnly = true)
@@ -122,9 +126,17 @@ public class AccountService {
                 .findForUpdateByAccount_IdAndCurrency(accountId, request.currencyTo())
                 .orElseThrow(AccountNotFoundException::new);
 
+        BigDecimal rate = exchangeRateProvider.rate(
+                request.currencyFrom(),
+                request.currencyTo()
+        );
+
         balanceFrom.withdraw(request.amount());
-        BigDecimal rate = new ExchangeRateProvider().rate(request.currencyFrom(), request.currencyTo());
-        BigDecimal resultAmount = request.amount().multiply(rate);
+
+        BigDecimal resultAmount = request.amount()
+                .multiply(rate)
+                .setScale(2, RoundingMode.HALF_UP);
+
         balanceTo.deposit(resultAmount);
 
         balanceRepository.save(balanceFrom);

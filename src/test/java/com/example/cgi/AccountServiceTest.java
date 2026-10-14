@@ -34,6 +34,9 @@ class AccountServiceTest {
     @Mock
     private AccountBalanceRepository balanceRepository;
 
+    @Mock
+    private ExchangeRateProvider exchangeRateProvider;
+
     @InjectMocks
     private AccountService accountService;
 
@@ -222,6 +225,9 @@ class AccountServiceTest {
 
     @Test
     void exchangeTransfersMoneyBetweenCurrencies() {
+        when(exchangeRateProvider.rate(Currency.EUR, Currency.USD))
+                .thenReturn(new BigDecimal("1.10"));
+
         AccountBalance eurBalance = new AccountBalance(account, Currency.EUR);
         eurBalance.deposit(new BigDecimal("100.00"));
 
@@ -246,8 +252,7 @@ class AccountServiceTest {
 
         assertMoneyEquals("50.00", eurBalance.getAmount());
 
-        BigDecimal rate = new ExchangeRateProvider()
-                .rate(Currency.EUR, Currency.USD);
+        BigDecimal rate = exchangeRateProvider.rate(Currency.EUR, Currency.USD);
         BigDecimal expectedUsd = new BigDecimal("20.00")
                 .add(new BigDecimal("50.00").multiply(rate));
 
@@ -259,6 +264,9 @@ class AccountServiceTest {
 
     @Test
     void exchangeEntireBalanceLeavesSourceBalanceZero() {
+        when(exchangeRateProvider.rate(Currency.EUR, Currency.USD))
+                .thenReturn(new BigDecimal("1.10"));
+
         AccountBalance eurBalance = new AccountBalance(account, Currency.EUR);
         eurBalance.deposit(new BigDecimal("100.00"));
 
@@ -284,8 +292,7 @@ class AccountServiceTest {
         assertMoneyEquals("0.00", eurBalance.getAmount());
 
         BigDecimal expectedUsd = new BigDecimal("100.00")
-                .multiply(new ExchangeRateProvider()
-                        .rate(Currency.EUR, Currency.USD));
+                .multiply(exchangeRateProvider.rate(Currency.EUR, Currency.USD));
 
         assertMoneyEquals(expectedUsd.toPlainString(), usdBalance.getAmount());
     }
