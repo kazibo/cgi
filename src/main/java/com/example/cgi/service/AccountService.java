@@ -1,6 +1,6 @@
 package com.example.cgi.service;
 
-import com.example.cgi.dto.DepositRequest;
+import com.example.cgi.dto.DepositWithdrawRequest;
 import com.example.cgi.dto.ExchangeRequest;
 import com.example.cgi.dto.OperationResponse;
 import com.example.cgi.exception.AccountNotFoundException;
@@ -38,7 +38,7 @@ public class AccountService {
     }
 
     @Transactional
-    public OperationResponse deposit(Long accountId, DepositRequest request) {
+    public OperationResponse deposit(Long accountId, DepositWithdrawRequest request) {
         if (request.amount().signum() <= 0) {
             throw new IllegalArgumentException(
                     "Amount must be positive"
@@ -49,7 +49,7 @@ public class AccountService {
                 .orElseThrow(AccountNotFoundException::new);
 
         AccountBalance balance = balanceRepository
-                .findForUpdate(accountId, request.currency())
+                .findForUpdateByAccount_IdAndCurrency(accountId, request.currency())
                 .orElseGet(() -> new AccountBalance(
                         account, request.currency()
                 ));
@@ -72,7 +72,7 @@ public class AccountService {
     }
 
     @Transactional
-    public OperationResponse withdraw(Long accountId, DepositRequest request) {
+    public OperationResponse withdraw(Long accountId, DepositWithdrawRequest request) {
         if (request.amount() == null || request.amount().signum() <= 0) {
             throw new IllegalArgumentException(
                     "Amount must be positive"
@@ -80,7 +80,7 @@ public class AccountService {
         }
 
         AccountBalance balance = balanceRepository
-                .findForUpdate(accountId, request.currency())
+                .findForUpdateByAccount_IdAndCurrency(accountId, request.currency())
                 .orElseThrow(AccountNotFoundException::new);
 
         balance.withdraw(request.amount());
@@ -109,11 +109,11 @@ public class AccountService {
         }
 
         AccountBalance balanceFrom = balanceRepository
-                .findForUpdate(accountId, request.currencyFrom())
+                .findForUpdateByAccount_IdAndCurrency(accountId, request.currencyFrom())
                 .orElseThrow(AccountNotFoundException::new);
 
         AccountBalance balanceTo = balanceRepository
-                .findForUpdate(accountId, request.currencyTo())
+                .findForUpdateByAccount_IdAndCurrency(accountId, request.currencyTo())
                 .orElseThrow(AccountNotFoundException::new);
 
         balanceFrom.withdraw(request.amount());

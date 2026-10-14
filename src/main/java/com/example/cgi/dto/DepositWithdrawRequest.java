@@ -5,7 +5,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public record DepositRequest(
+public record DepositWithdrawRequest(
         @NotNull Currency currency,
 
         @NotNull

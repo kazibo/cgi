@@ -2,7 +2,7 @@ package com.example.cgi.controller;
 
 import com.example.cgi.client.ExternalLoggingClient;
 import com.example.cgi.dto.BalanceResponse;
-import com.example.cgi.dto.DepositRequest;
+import com.example.cgi.dto.DepositWithdrawRequest;
 import com.example.cgi.dto.ExchangeRequest;
 import com.example.cgi.dto.OperationResponse;
 import com.example.cgi.entity.AccountBalance;
@@ -47,7 +47,7 @@ public class AccountController {
     @PostMapping("/{id}/deposit")
     public OperationResponse deposit(
             @PathVariable Long id,
-            @Valid @RequestBody DepositRequest request
+            @Valid @RequestBody DepositWithdrawRequest request
     ) {
         return accountService.deposit(id, request);
     }
@@ -55,7 +55,7 @@ public class AccountController {
     @PostMapping("/{id}/withdraw")
     public OperationResponse withdraw(
             @PathVariable Long id,
-            @Valid @RequestBody DepositRequest request
+            @Valid @RequestBody DepositWithdrawRequest request
     ) {
         loggingClient.logWithdrawal();
         return accountService.withdraw(id, request);

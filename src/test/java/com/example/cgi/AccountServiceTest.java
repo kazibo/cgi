@@ -1,6 +1,6 @@
 package com.example.cgi;
 
-import com.example.cgi.dto.DepositRequest;
+import com.example.cgi.dto.DepositWithdrawRequest;
 import com.example.cgi.dto.ExchangeRequest;
 import com.example.cgi.entity.Account;
 import com.example.cgi.entity.AccountBalance;
@@ -48,7 +48,7 @@ class AccountServiceTest {
         when(accountRepository.findById(1L))
                 .thenReturn(Optional.of(account));
 
-        when(balanceRepository.findForUpdate(1L, Currency.EUR))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.EUR))
                 .thenReturn(Optional.empty());
 
         when(balanceRepository.findAllByAccount_Id(1L))
@@ -57,7 +57,7 @@ class AccountServiceTest {
         // When: deposit 100 EUR
         accountService.deposit(
                 1L,
-                new DepositRequest(Currency.EUR, new BigDecimal("100.00"))
+                new DepositWithdrawRequest(Currency.EUR, new BigDecimal("100.00"))
         );
 
         // Then: the saved balance is exactly 100 EUR
@@ -90,7 +90,7 @@ class AccountServiceTest {
         when(accountRepository.findById(1L))
                 .thenReturn(Optional.of(account));
 
-        when(balanceRepository.findForUpdate(1L, Currency.EUR))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.EUR))
                 .thenReturn(Optional.of(balance));
 
         when(balanceRepository.findAllByAccount_Id(1L))
@@ -99,7 +99,7 @@ class AccountServiceTest {
         // When: deposit another 30 EUR
         accountService.deposit(
                 1L,
-                new DepositRequest(Currency.EUR, new BigDecimal("30.00"))
+                new DepositWithdrawRequest(Currency.EUR, new BigDecimal("30.00"))
         );
 
         // Then: balance is 80 EUR
@@ -118,7 +118,7 @@ class AccountServiceTest {
 
         balance.deposit(new BigDecimal("100.00"));
 
-        when(balanceRepository.findForUpdate(1L, Currency.EUR))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.EUR))
                 .thenReturn(Optional.of(balance));
 
         when(balanceRepository.findAllByAccount_Id(1L))
@@ -127,7 +127,7 @@ class AccountServiceTest {
         // When: withdraw 25 EUR
         accountService.withdraw(
                 1L,
-                new DepositRequest(Currency.EUR, new BigDecimal("25.00"))
+                new DepositWithdrawRequest(Currency.EUR, new BigDecimal("25.00"))
         );
 
         // Then: balance is 75 EUR
@@ -146,7 +146,7 @@ class AccountServiceTest {
 
         balance.deposit(new BigDecimal("100.00"));
 
-        when(balanceRepository.findForUpdate(1L, Currency.EUR))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.EUR))
                 .thenReturn(Optional.of(balance));
 
         when(balanceRepository.findAllByAccount_Id(1L))
@@ -155,7 +155,7 @@ class AccountServiceTest {
         // When: withdraw the entire balance
         accountService.withdraw(
                 1L,
-                new DepositRequest(Currency.EUR, new BigDecimal("100.00"))
+                new DepositWithdrawRequest(Currency.EUR, new BigDecimal("100.00"))
         );
 
         // Then: balance is zero
@@ -170,7 +170,7 @@ class AccountServiceTest {
 
         balance.deposit(new BigDecimal("50.00"));
 
-        when(balanceRepository.findForUpdate(1L, Currency.EUR))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.EUR))
                 .thenReturn(Optional.of(balance));
 
         // When / Then: withdrawing 60 EUR fails
@@ -178,7 +178,7 @@ class AccountServiceTest {
                 InsufficientFundsException.class,
                 () -> accountService.withdraw(
                         1L,
-                        new DepositRequest(
+                        new DepositWithdrawRequest(
                                 Currency.EUR,
                                 new BigDecimal("60.00")
                         )
@@ -198,7 +198,7 @@ class AccountServiceTest {
                 IllegalArgumentException.class,
                 () -> accountService.deposit(
                         1L,
-                        new DepositRequest(Currency.EUR, BigDecimal.ZERO)
+                        new DepositWithdrawRequest(Currency.EUR, BigDecimal.ZERO)
                 )
         );
 
@@ -212,7 +212,7 @@ class AccountServiceTest {
                 IllegalArgumentException.class,
                 () -> accountService.withdraw(
                         1L,
-                        new DepositRequest(Currency.EUR, new BigDecimal("-10.00"))
+                        new DepositWithdrawRequest(Currency.EUR, new BigDecimal("-10.00"))
                 )
         );
 
@@ -228,9 +228,9 @@ class AccountServiceTest {
         AccountBalance usdBalance = new AccountBalance(account, Currency.USD);
         usdBalance.deposit(new BigDecimal("20.00"));
 
-        when(balanceRepository.findForUpdate(1L, Currency.EUR))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.EUR))
                 .thenReturn(Optional.of(eurBalance));
-        when(balanceRepository.findForUpdate(1L, Currency.USD))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.USD))
                 .thenReturn(Optional.of(usdBalance));
         when(balanceRepository.findAllByAccount_Id(1L))
                 .thenReturn(List.of(eurBalance, usdBalance));
@@ -264,9 +264,9 @@ class AccountServiceTest {
 
         AccountBalance usdBalance = new AccountBalance(account, Currency.USD);
 
-        when(balanceRepository.findForUpdate(1L, Currency.EUR))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.EUR))
                 .thenReturn(Optional.of(eurBalance));
-        when(balanceRepository.findForUpdate(1L, Currency.USD))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.USD))
                 .thenReturn(Optional.of(usdBalance));
         when(balanceRepository.findAllByAccount_Id(1L))
                 .thenReturn(List.of(eurBalance, usdBalance));
@@ -297,9 +297,9 @@ class AccountServiceTest {
 
         AccountBalance usdBalance = new AccountBalance(account, Currency.USD);
 
-        when(balanceRepository.findForUpdate(1L, Currency.EUR))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.EUR))
                 .thenReturn(Optional.of(eurBalance));
-        when(balanceRepository.findForUpdate(1L, Currency.USD))
+        when(balanceRepository.findForUpdateByAccount_IdAndCurrency(1L, Currency.USD))
                 .thenReturn(Optional.of(usdBalance));
 
         assertThrows(

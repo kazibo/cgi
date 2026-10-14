@@ -2,7 +2,7 @@ package com.example.cgi;
 
 import com.example.cgi.client.ExternalLoggingClient;
 import com.example.cgi.controller.AccountController;
-import com.example.cgi.dto.DepositRequest;
+import com.example.cgi.dto.DepositWithdrawRequest;
 import com.example.cgi.dto.ExchangeRequest;
 import com.example.cgi.dto.OperationResponse;
 import com.example.cgi.entity.AccountBalance;
@@ -63,7 +63,7 @@ class AccountControllerTest {
 
     @Test
     void depositReturnsOperationResponse() throws Exception {
-        given(accountService.deposit(eq(1L), any(DepositRequest.class)))
+        given(accountService.deposit(eq(1L), any(DepositWithdrawRequest.class)))
                 .willReturn(new OperationResponse(
                         true,
                         "Deposit completed successfully",
@@ -91,12 +91,12 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.operation.currency").value("EUR"))
                 .andExpect(jsonPath("$.operation.amount").value(100.00));
 
-        verify(accountService).deposit(eq(1L), any(DepositRequest.class));
+        verify(accountService).deposit(eq(1L), any(DepositWithdrawRequest.class));
     }
 
     @Test
     void depositWithNegativeAmountReturnsBadRequest() throws Exception {
-        given(accountService.deposit(eq(1L), any(DepositRequest.class)))
+        given(accountService.deposit(eq(1L), any(DepositWithdrawRequest.class)))
                 .willThrow(new IllegalArgumentException("Amount must be positive"));
 
         mockMvc.perform(post("/api/accounts/1/deposit")
@@ -112,7 +112,7 @@ class AccountControllerTest {
 
     @Test
     void withdrawReturnsOperationResponseAndLogsWithdrawal() throws Exception {
-        given(accountService.withdraw(eq(1L), any(DepositRequest.class)))
+        given(accountService.withdraw(eq(1L), any(DepositWithdrawRequest.class)))
                 .willReturn(new OperationResponse(
                         true,
                         "Withdraw completed successfully",
@@ -141,12 +141,12 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.operation.amount").value(25.00));
 
         verify(loggingClient).logWithdrawal();
-        verify(accountService).withdraw(eq(1L), any(DepositRequest.class));
+        verify(accountService).withdraw(eq(1L), any(DepositWithdrawRequest.class));
     }
 
     @Test
     void withdrawWithInsufficientFundsReturnsError() throws Exception {
-        given(accountService.withdraw(eq(1L), any(DepositRequest.class)))
+        given(accountService.withdraw(eq(1L), any(DepositWithdrawRequest.class)))
                 .willThrow(new InsufficientFundsException());
 
         mockMvc.perform(post("/api/accounts/1/withdraw")
@@ -160,7 +160,7 @@ class AccountControllerTest {
                 .andExpect(status().isUnprocessableContent());
 
         verify(loggingClient).logWithdrawal();
-        verify(accountService).withdraw(eq(1L), any(DepositRequest.class));
+        verify(accountService).withdraw(eq(1L), any(DepositWithdrawRequest.class));
     }
 
     @Test
@@ -222,7 +222,7 @@ class AccountControllerTest {
 
     @Test
     void depositForUnknownAccountReturnsNotFound() throws Exception {
-        given(accountService.deposit(eq(999L), any(DepositRequest.class)))
+        given(accountService.deposit(eq(999L), any(DepositWithdrawRequest.class)))
                 .willThrow(new AccountNotFoundException());
 
         mockMvc.perform(post("/api/accounts/999/deposit")
@@ -235,6 +235,6 @@ class AccountControllerTest {
                                 """))
                 .andExpect(status().isNotFound());
 
-        verify(accountService).deposit(eq(999L), any(DepositRequest.class));
+        verify(accountService).deposit(eq(999L), any(DepositWithdrawRequest.class));
     }
 }
