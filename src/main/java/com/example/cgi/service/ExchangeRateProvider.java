@@ -85,7 +85,7 @@ public class ExchangeRateProvider {
                                 || rate.sell() == null
                                 || rate.buy().signum() <= 0
                                 || rate.sell().signum() <= 0
-                                || rate.buy().compareTo(rate.sell()) > 0) {
+                                || rate.sell().compareTo(rate.buy()) > 0) {
                                 throw new IllegalStateException(
                                         "Invalid exchange rates for " + currency
                                 );
