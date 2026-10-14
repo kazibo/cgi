@@ -38,33 +38,30 @@ public class AccountController {
         );
     }
 
-    @PostMapping("/{id}/deposits")
-    public ResponseEntity<Void> deposit(
+    @PostMapping("/{id}/deposit")
+    public OperationResponse deposit(
             @PathVariable Long id,
             @Valid @RequestBody DepositRequest request
     ) {
-        accountService.deposit(id, request);
-        return ResponseEntity.noContent().build();
+        return accountService.deposit(id, request);
     }
 
     @PostMapping("/{id}/withdraw")
-    public ResponseEntity<Void> withdraw(
+    public OperationResponse withdraw(
             @PathVariable Long id,
             @Valid @RequestBody DepositRequest request
     ) {
         loggingClient.logWithdrawal();
-        accountService.withdraw(id, request);
+        return accountService.withdraw(id, request);
         // possibly should also log withdrawal result (success/failure)
-        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/exchange")
-    public ResponseEntity<Void> exchange(
+    public OperationResponse exchange(
             @PathVariable Long id,
             @Valid @RequestBody ExchangeRequest request
     ) {
-        accountService.exchange(id, request);
-        return ResponseEntity.noContent().build();
+        return accountService.exchange(id, request);
     }
 
 }

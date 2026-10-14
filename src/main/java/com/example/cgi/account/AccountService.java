@@ -31,7 +31,7 @@ public class AccountService {
     }
 
     @Transactional
-    public void deposit(Long accountId, DepositRequest request) {
+    public OperationResponse deposit(Long accountId, DepositRequest request) {
         if (request.amount().signum() <= 0) {
             throw new IllegalArgumentException(
                     "Amount must be positive"
@@ -50,10 +50,22 @@ public class AccountService {
         balance.deposit(request.amount());
 
         balanceRepository.save(balance);
+
+        return new OperationResponse(
+                true,
+                "Deposit completed successfully",
+                new OperationResponse.OperationDetails(
+                        "DEPOSIT",
+                        request.currency(),
+                        request.amount(),
+                        null, null, null, null, null
+                ),
+                getBalances(accountId)
+        );
     }
 
     @Transactional
-    public void withdraw(Long accountId, DepositRequest request) {
+    public OperationResponse withdraw(Long accountId, DepositRequest request) {
         if (request.amount() == null || request.amount().signum() <= 0) {
             throw new IllegalArgumentException(
                     "Amount must be positive"
@@ -67,10 +79,22 @@ public class AccountService {
         balance.withdraw(request.amount());
 
         balanceRepository.save(balance);
+
+        return new OperationResponse(
+                true,
+                "Withdraw completed successfully",
+                new OperationResponse.OperationDetails(
+                        "WITHDRAW",
+                        request.currency(),
+                        request.amount(),
+                        null, null, null, null, null
+                ),
+                getBalances(accountId)
+        );
     }
 
     @Transactional
-    public void exchange(Long accountId, ExchangeRequest request) {
+    public OperationResponse exchange(Long accountId, ExchangeRequest request) {
         if (request.amount() == null || request.amount().signum() <= 0) {
             throw new IllegalArgumentException(
                     "Amount must be positive"
@@ -87,9 +111,26 @@ public class AccountService {
 
         balanceFrom.withdraw(request.amount());
         BigDecimal rate = new ExchangeRateProvider().rate(request.currencyFrom(), request.currencyTo());
-        balanceTo.deposit(request.amount().multiply(rate));
+        BigDecimal resultAmount = request.amount().multiply(rate);
+        balanceTo.deposit(resultAmount);
 
         balanceRepository.save(balanceFrom);
         balanceRepository.save(balanceTo);
+
+        return new OperationResponse(
+                true,
+                "Currency exchange completed successfully",
+                new OperationResponse.OperationDetails(
+                        "EXCHANGE",
+                        null,
+                        null,
+                        request.currencyFrom(),
+                        request.amount(),
+                        request.currencyTo(),
+                        resultAmount,
+                        rate
+                ),
+                getBalances(accountId)
+        );
     }
 }
