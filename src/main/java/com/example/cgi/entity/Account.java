@@ -25,7 +25,7 @@ public class Account {
         return id;
     }
 
-    public Long getName() { return id; }
+    public String getName() { return name; }
 
     public Instant getCreatedAt() {
         return createdAt;
