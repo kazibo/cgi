@@ -6,6 +6,7 @@ import com.example.cgi.dto.OperationResponse;
 import com.example.cgi.exception.AccountNotFoundException;
 import com.example.cgi.entity.Account;
 import com.example.cgi.entity.AccountBalance;
+import com.example.cgi.model.Currency;
 import com.example.cgi.repository.AccountBalanceRepository;
 import com.example.cgi.repository.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -118,13 +119,32 @@ public class AccountService {
             );
         }
 
-        AccountBalance balanceFrom = balanceRepository
-                .findForUpdateByAccount_IdAndCurrency(accountId, request.currencyFrom())
+        // Always acquire locks in the same order to prevent deadlocks.
+        Currency firstCurrency = request.currencyFrom()
+                .compareTo(request.currencyTo()) < 0
+                ? request.currencyFrom()
+                : request.currencyTo();
+
+        Currency secondCurrency = firstCurrency == request.currencyFrom()
+                ? request.currencyTo()
+                : request.currencyFrom();
+
+        AccountBalance firstBalance = balanceRepository
+                .findForUpdateByAccount_IdAndCurrency(accountId, firstCurrency)
                 .orElseThrow(AccountNotFoundException::new);
 
-        AccountBalance balanceTo = balanceRepository
-                .findForUpdateByAccount_IdAndCurrency(accountId, request.currencyTo())
+        AccountBalance secondBalance = balanceRepository
+                .findForUpdateByAccount_IdAndCurrency(accountId, secondCurrency)
                 .orElseThrow(AccountNotFoundException::new);
+
+        // Restore the requested exchange direction.
+        AccountBalance balanceFrom = request.currencyFrom() == firstCurrency
+                ? firstBalance
+                : secondBalance;
+
+        AccountBalance balanceTo = request.currencyTo() == firstCurrency
+                ? firstBalance
+                : secondBalance;
 
         BigDecimal rate = exchangeRateProvider.rate(
                 request.currencyFrom(),
