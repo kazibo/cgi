@@ -1,6 +1,13 @@
-package com.example.cgi.account;
+package com.example.cgi.service;
 
-import com.example.cgi.exceptions.AccountNotFoundException;
+import com.example.cgi.dto.DepositRequest;
+import com.example.cgi.dto.ExchangeRequest;
+import com.example.cgi.dto.OperationResponse;
+import com.example.cgi.exception.AccountNotFoundException;
+import com.example.cgi.entity.Account;
+import com.example.cgi.entity.AccountBalance;
+import com.example.cgi.repository.AccountBalanceRepository;
+import com.example.cgi.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,4 +1,4 @@
-package com.example.cgi.exceptions;
+package com.example.cgi.exception;
 
 public class AccountNotFoundException extends RuntimeException {
 

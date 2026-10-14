@@ -1,5 +1,6 @@
-package com.example.cgi.account;
+package com.example.cgi.dto;
 
+import com.example.cgi.model.Currency;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;

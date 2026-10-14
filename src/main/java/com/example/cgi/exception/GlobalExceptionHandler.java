@@ -1,7 +1,5 @@
-package com.example.cgi.account;
+package com.example.cgi.exception;
 
-import com.example.cgi.exceptions.AccountNotFoundException;
-import com.example.cgi.exceptions.InsufficientFundsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;

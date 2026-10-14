@@ -1,4 +1,7 @@
-package com.example.cgi.account;
+package com.example.cgi.dto;
+
+import com.example.cgi.entity.AccountBalance;
+import com.example.cgi.model.Currency;
 
 import java.math.BigDecimal;
 import java.util.List;

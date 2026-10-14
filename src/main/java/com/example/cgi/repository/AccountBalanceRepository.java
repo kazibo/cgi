@@ -1,5 +1,7 @@
-package com.example.cgi.account;
+package com.example.cgi.repository;
 
+import com.example.cgi.entity.AccountBalance;
+import com.example.cgi.model.Currency;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;

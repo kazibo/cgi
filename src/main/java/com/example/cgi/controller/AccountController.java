@@ -1,7 +1,13 @@
-package com.example.cgi.account;
+package com.example.cgi.controller;
 
+import com.example.cgi.client.ExternalLoggingClient;
+import com.example.cgi.dto.BalanceResponse;
+import com.example.cgi.dto.DepositRequest;
+import com.example.cgi.dto.ExchangeRequest;
+import com.example.cgi.dto.OperationResponse;
+import com.example.cgi.entity.AccountBalance;
+import com.example.cgi.service.AccountService;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;

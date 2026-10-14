@@ -1,16 +1,13 @@
-package com.example.cgi.account;
+package com.example.cgi.service;
 
+import com.example.cgi.model.Currency;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
-public record BalanceResponse(
-        Long accountId,
-        Map<Currency, BigDecimal> balances
-) {
-    @Component
-    public static class ExchangeRateProvider {
+@Component
+public class ExchangeRateProvider {
 
         private static final Map<Currency, BigDecimal> PER_EUR =
                 Map.of(
@@ -21,14 +18,13 @@ public record BalanceResponse(
                 );
 
         public BigDecimal rate(Currency from, Currency to) {
-            BigDecimal fromRate = PER_EUR.get(from);
-            BigDecimal toRate = PER_EUR.get(to);
+                BigDecimal fromRate = PER_EUR.get(from);
+                BigDecimal toRate = PER_EUR.get(to);
 
-            return toRate.divide(
-                    fromRate,
-                    8,
-                    java.math.RoundingMode.HALF_UP
-            );
+                return toRate.divide(
+                        fromRate,
+                        8,
+                        java.math.RoundingMode.HALF_UP
+                );
         }
-    }
 }

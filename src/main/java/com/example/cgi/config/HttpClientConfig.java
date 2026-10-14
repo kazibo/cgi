@@ -1,4 +1,4 @@
-package com.example.cgi.account;
+package com.example.cgi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

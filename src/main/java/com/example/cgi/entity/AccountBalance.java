@@ -1,6 +1,7 @@
-package com.example.cgi.account;
+package com.example.cgi.entity;
 
-import com.example.cgi.exceptions.InsufficientFundsException;
+import com.example.cgi.exception.InsufficientFundsException;
+import com.example.cgi.model.Currency;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 

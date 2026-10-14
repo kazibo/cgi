@@ -1,4 +1,4 @@
-package com.example.cgi.account;
+package com.example.cgi.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;

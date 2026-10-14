@@ -82,3 +82,7 @@ The application uses H2. Database persistence depends on the configured H2 URL. 
 ## Configuration
 
 External logging URL and other application settings can be configured in `src/main/resources/application.yaml`.
+
+## Testing
+
+Database is seeded with sample data. 4 total accounts with ids 1-4. Go to http://localhost:8080/swagger-ui/index.html to try out how endpoints work.
