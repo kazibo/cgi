@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: cgi
+
+  datasource:
+    url: jdbc:h2:mem:bankdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:  ""
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+external:
+  logging:
+    url: https://the-internet.herokuapp.com/status_codes/200

@@ -11,9 +11,14 @@ import java.util.stream.Collectors;
 public class AccountController {
 
     private final AccountService accountService;
+    private final ExternalLoggingClient loggingClient;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(
+            AccountService accountService,
+            ExternalLoggingClient loggingClient
+    ) {
         this.accountService = accountService;
+        this.loggingClient = loggingClient;
     }
 
     @GetMapping("/{id}")
@@ -47,7 +52,9 @@ public class AccountController {
             @PathVariable Long id,
             @Valid @RequestBody DepositRequest request
     ) {
+        loggingClient.logWithdrawal();
         accountService.withdraw(id, request);
+        // possibly should also log withdrawal result (success/failure)
         return ResponseEntity.noContent().build();
     }
 
@@ -58,11 +65,6 @@ public class AccountController {
     ) {
         accountService.exchange(id, request);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/test")
-    public String test(){
-        return "Test endpoint";
     }
 
 }
