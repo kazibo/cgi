@@ -4,6 +4,7 @@ import com.example.cgi.client.ExternalLoggingClient;
 import com.example.cgi.controller.AccountController;
 import com.example.cgi.dto.DepositWithdrawRequest;
 import com.example.cgi.dto.ExchangeRequest;
+import com.example.cgi.dto.OperationDetails;
 import com.example.cgi.dto.OperationResponse;
 import com.example.cgi.entity.AccountBalance;
 import com.example.cgi.exception.AccountNotFoundException;
@@ -67,10 +68,9 @@ class AccountControllerTest {
                 .willReturn(new OperationResponse(
                         true,
                         "Deposit completed successfully",
-                        new OperationResponse.OperationDetails(
-                                "DEPOSIT", Currency.EUR,
-                                new BigDecimal("100.00"),
-                                null, null, null, null, null
+                        new OperationDetails.Deposit(
+                                Currency.EUR,
+                                new BigDecimal("100.00")
                         ),
                         List.of()
                 ));
@@ -87,7 +87,6 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message")
                         .value("Deposit completed successfully"))
-                .andExpect(jsonPath("$.operation.type").value("DEPOSIT"))
                 .andExpect(jsonPath("$.operation.currency").value("EUR"))
                 .andExpect(jsonPath("$.operation.amount").value(100.00));
 
@@ -116,10 +115,9 @@ class AccountControllerTest {
                 .willReturn(new OperationResponse(
                         true,
                         "Withdraw completed successfully",
-                        new OperationResponse.OperationDetails(
-                                "WITHDRAW", Currency.EUR,
-                                new BigDecimal("25.00"),
-                                null, null, null, null, null
+                        new OperationDetails.Withdraw(
+                                Currency.EUR,
+                                new BigDecimal("25.00")
                         ),
                         List.of()
                 ));
@@ -136,7 +134,6 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message")
                         .value("Withdraw completed successfully"))
-                .andExpect(jsonPath("$.operation.type").value("WITHDRAW"))
                 .andExpect(jsonPath("$.operation.currency").value("EUR"))
                 .andExpect(jsonPath("$.operation.amount").value(25.00));
 
@@ -169,8 +166,7 @@ class AccountControllerTest {
                 .willReturn(new OperationResponse(
                         true,
                         "Currency exchange completed successfully",
-                        new OperationResponse.OperationDetails(
-                                "EXCHANGE", null, null,
+                        new OperationDetails.Exchange(
                                 Currency.EUR, new BigDecimal("100.00"),
                                 Currency.USD, new BigDecimal("110.00"),
                                 new BigDecimal("1.10")
@@ -191,7 +187,6 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message")
                         .value("Currency exchange completed successfully"))
-                .andExpect(jsonPath("$.operation.type").value("EXCHANGE"))
                 .andExpect(jsonPath("$.operation.currencyFrom").value("EUR"))
                 .andExpect(jsonPath("$.operation.amountFrom").value(100.00))
                 .andExpect(jsonPath("$.operation.currencyTo").value("USD"))

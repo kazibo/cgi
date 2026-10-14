@@ -2,6 +2,7 @@ package com.example.cgi.service;
 
 import com.example.cgi.dto.DepositWithdrawRequest;
 import com.example.cgi.dto.ExchangeRequest;
+import com.example.cgi.dto.OperationDetails;
 import com.example.cgi.dto.OperationResponse;
 import com.example.cgi.exception.AccountNotFoundException;
 import com.example.cgi.entity.Account;
@@ -66,11 +67,9 @@ public class AccountService {
         return new OperationResponse(
                 true,
                 "Deposit completed successfully",
-                new OperationResponse.OperationDetails(
-                        "DEPOSIT",
+                new OperationDetails.Deposit(
                         request.currency(),
-                        request.amount(),
-                        null, null, null, null, null
+                        request.amount()
                 ),
                 getBalances(accountId)
         );
@@ -95,11 +94,9 @@ public class AccountService {
         return new OperationResponse(
                 true,
                 "Withdraw completed successfully",
-                new OperationResponse.OperationDetails(
-                        "WITHDRAW",
+                new OperationDetails.Withdraw(
                         request.currency(),
-                        request.amount(),
-                        null, null, null, null, null
+                        request.amount()
                 ),
                 getBalances(accountId)
         );
@@ -165,10 +162,7 @@ public class AccountService {
         return new OperationResponse(
                 true,
                 "Currency exchange completed successfully",
-                new OperationResponse.OperationDetails(
-                        "EXCHANGE",
-                        null,
-                        null,
+                new OperationDetails.Exchange(
                         request.currencyFrom(),
                         request.amount(),
                         request.currencyTo(),
