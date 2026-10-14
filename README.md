@@ -87,4 +87,14 @@ External logging URL and other application settings can be configured in `src/ma
 
 Database is seeded with sample data. 4 total accounts with ids 1-4. Go to http://localhost:8080/swagger-ui/index.html to try out how endpoints work.
 
-Run tests with `.\mvnw.cmd test` on Windows and `./mvnw test` on Linux / macOS 
+Run tests with `.\mvnw.cmd test` on Windows and `./mvnw test` on Linux / macOS
+
+## Future improvements
+
+It is clear that the project is merely a sample and a lot more could be done to bring it closer to real world use.
+
+For example:
+
+- Exchange rates could be taken from Swedbank's exchange rates page
+- Withdraw/exchange limits
+- Rounding rules for operations

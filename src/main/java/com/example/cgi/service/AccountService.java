@@ -108,6 +108,12 @@ public class AccountService {
             );
         }
 
+        if (request.currencyFrom() == request.currencyTo()){
+            throw new IllegalArgumentException(
+                    "Source and target currencies should be different, same given"
+            );
+        }
+
         AccountBalance balanceFrom = balanceRepository
                 .findForUpdateByAccount_IdAndCurrency(accountId, request.currencyFrom())
                 .orElseThrow(AccountNotFoundException::new);
