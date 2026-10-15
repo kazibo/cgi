@@ -1,5 +1,7 @@
 package com.example.cgi.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AccountNotFoundException.class)
     public ProblemDetail handleAccountNotFound(
@@ -63,5 +67,18 @@ public class GlobalExceptionHandler {
                 "error", "Validation failed",
                 "messages", errors
         ));
+    }
+
+    @ExceptionHandler(ExternalLoggingException.class)
+    public ResponseEntity<ProblemDetail> handleExternalLogging(ExternalLoggingException e) {
+        log.error("Withdrawal rejected: external logging failed", e);
+
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_GATEWAY,
+                "Withdrawal was not processed because the external logging service failed. No funds were debited. Please try again later."
+        );
+        body.setTitle("External logging failed");
+
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(body);
     }
 }

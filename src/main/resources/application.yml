@@ -15,3 +15,4 @@ spring:
 external:
   logging:
     url: https://the-internet.herokuapp.com/status_codes/200
+    timeout: 3

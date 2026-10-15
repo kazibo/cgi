@@ -57,7 +57,7 @@ public class AccountController {
             @PathVariable Long id,
             @Valid @RequestBody DepositWithdrawRequest request
     ) {
-        loggingClient.logWithdrawal();
+        loggingClient.logWithdrawal(request);
         return accountService.withdraw(id, request);
         // possibly should also log withdrawal result (success/failure)
     }

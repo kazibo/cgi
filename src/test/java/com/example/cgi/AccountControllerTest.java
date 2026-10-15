@@ -137,7 +137,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.operation.currency").value("EUR"))
                 .andExpect(jsonPath("$.operation.amount").value(25.00));
 
-        verify(loggingClient).logWithdrawal();
+        verify(loggingClient).logWithdrawal(any(DepositWithdrawRequest.class));
         verify(accountService).withdraw(eq(1L), any(DepositWithdrawRequest.class));
     }
 
@@ -156,7 +156,7 @@ class AccountControllerTest {
                                 """))
                 .andExpect(status().isUnprocessableContent());
 
-        verify(loggingClient).logWithdrawal();
+        verify(loggingClient).logWithdrawal(any(DepositWithdrawRequest.class));
         verify(accountService).withdraw(eq(1L), any(DepositWithdrawRequest.class));
     }
 
